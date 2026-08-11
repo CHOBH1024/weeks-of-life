@@ -1,0 +1,18 @@
+{
+  "name": "인생 주간 계산기",
+  "short_name": "인생 주간",
+  "description": "당신의 인생이 몇 주 남았는지 한눈에. 4,680주의 시각화.",
+  "start_url": "/",
+  "display": "standalone",
+  "background_color": "#faf7f2",
+  "theme_color": "#2b2620",
+  "lang": "ko",
+  "icons": [
+    {
+      "src": "/icon-512.png",
+      "sizes": "512x512",
+      "type": "image/png",
+      "purpose": "any maskable"
+    }
+  ]
+}
