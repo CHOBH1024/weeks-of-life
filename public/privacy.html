@@ -1,0 +1,197 @@
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>인생 주간 계산기 | 몇 주 남았을까 — Life in Weeks</title>
+<meta name="description" content="당신의 인생이 몇 주 남았는지 한눈에 보여주는 계산기. 인생을 주 단위로 시각화해서 오늘을 소중히 보내게 도와줍니다.">
+<meta property="og:title" content="인생 주간 계산기 | 몇 주 남았을까" />
+<meta property="og:description" content="인생을 4,680주로 나눠보세요. 각 점은 당신의 인생 1주입니다." />
+<meta property="og:type" content="website" />
+<meta property="og:image" content="https://weeks-of-life.pomyjo.com/og-banner.png" />
+<meta property="og:image:width" content="1200" />
+<meta property="og:image:height" content="630" />
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Noto+Serif+KR:wght@400;700;900&family=Noto+Sans+KR:wght@400;700;800&display=swap" rel="stylesheet">
+<style>
+  * { box-sizing: border-box; margin: 0; padding: 0; }
+  body { font-family: 'Noto Sans KR', sans-serif; background: linear-gradient(160deg,#faf7f2 0%,#f3ede2 100%); color: #2b2620; min-height: 100vh; }
+  .wrap { max-width: 720px; margin: 0 auto; padding: 32px 20px 60px; }
+  header { text-align: center; padding: 24px 0 8px; }
+  .logo { font-family: 'Noto Serif KR', serif; font-size: 20px; font-weight: 900; color: #8a6d3b; letter-spacing: -0.5px; }
+  h1 { font-family: 'Noto Serif KR', serif; font-size: clamp(26px,5vw,38px); font-weight: 900; margin: 16px 0 8px; line-height: 1.4; }
+  .sub { font-size: 13px; color: #6b6355; line-height: 1.8; margin-bottom: 24px; }
+  .card { background: #fffdf8; border: 1px solid #e5ded2; border-radius: 14px; padding: 24px; margin-bottom: 16px; }
+  label { font-size: 12px; font-weight: 700; color: #7a7060; display: block; margin-bottom: 6px; }
+  input[type=date], input[type=number] { width: 100%; padding: 12px 14px; border-radius: 8px; border: 1px solid #ddd3c2; background: #fffdf8; font-size: 15px; color: #2b2620; font-family: inherit; margin-bottom: 14px; }
+  .row2 { display: grid; grid-template-columns: 1fr 1fr; gap: 12px; }
+  button.primary { width: 100%; padding: 14px; border-radius: 8px; border: none; background: #2b2620; color: #faf7f2; font-size: 15px; font-weight: 800; cursor: pointer; font-family: inherit; }
+  button.primary:hover { background: #3d3830; }
+  .stats { display: grid; grid-template-columns: repeat(3,1fr); gap: 8px; margin-bottom: 16px; }
+  .stat { background: #f7f2e9; border-radius: 10px; padding: 12px 8px; text-align: center; }
+  .stat .n { font-family: 'Noto Serif KR', serif; font-size: 22px; font-weight: 900; color: #8a6d3b; }
+  .stat .l { font-size: 10px; color: #7a7060; margin-top: 2px; }
+  .grid { display: grid; grid-template-columns: repeat(52, 1fr); gap: 2px; margin: 8px 0 4px; }
+  .cell { aspect-ratio: 1; border-radius: 1.5px; }
+  .cell.past { background: #ddd3c2; }
+  .cell.now { background: #8a6d3b; box-shadow: 0 0 0 2px #c9a867; }
+  .cell.future { background: #e5ded2; }
+  .legend { display: flex; gap: 16px; font-size: 10px; color: #7a7060; margin: 10px 0 4px; }
+  .legend span { display: flex; align-items: center; gap: 5px; }
+  .legend i { width: 10px; height: 10px; border-radius: 2px; display: inline-block; }
+  .quote { font-family: 'Noto Serif KR', serif; font-size: 15px; line-height: 1.9; color: #5a5245; text-align: center; padding: 20px 8px; }
+  .share { display: flex; gap: 8px; margin-top: 12px; }
+  .share button { flex: 1; padding: 11px 0; border-radius: 8px; font-size: 13px; font-weight: 800; cursor: pointer; font-family: inherit; border: 1px solid #ddd3c2; background: #fffdf8; color: #5a5245; }
+  .share button:first-child { background: #2b2620; color: #faf7f2; border: none; }
+  footer { text-align: center; font-size: 11px; color: #9a9081; margin-top: 32px; line-height: 1.8; }
+  footer a { color: #8a6d3b; text-decoration: none; font-weight: 700; }
+  .faq { margin-top: 8px; }
+  .faq h3 { font-size: 14px; font-weight: 800; margin: 14px 0 6px; font-family: 'Noto Serif KR', serif; }
+  .faq p { font-size: 12px; color: #6b6355; line-height: 1.8; }
+</style>
+<script async src="https://pagead2.googlesyndication.com/pagead/js/adsbygoogle.js?client=ca-pub-9992037844935954" crossorigin="anonymous"></script>
+  <link rel="canonical" href="https://weeks-of-life.pomyjo.com/">
+</head>
+<body>
+<div class="wrap">
+  <header>
+    <div class="logo">올진단 · 인생 주간 계산기</div>
+    <h1>당신의 인생,<br />몇 주가 남았나요?</h1>
+    <p class="sub">90년의 인생을 주 단위로 나누면 <strong style="color:#8a6d3b;">4,680주</strong>입니다.<br />각 점은 당신 인생의 1주 — 오늘을 소중히 보내게 도와드립니다.</p>
+  </header>
+
+  <div class="card">
+    <div class="row2">
+      <div>
+        <label>생년월일</label>
+        <input type="date" id="birth">
+      </div>
+      <div>
+        <label>기대 수명 (세)</label>
+        <input type="number" id="lifespan" value="80" min="50" max="120">
+      </div>
+    </div>
+    <button class="primary" onclick="calc()">인생 보기</button>
+  </div>
+
+  <div id="result" style="display:none;">
+    <div class="stats">
+      <div class="stat"><div class="n" id="st-passed">0</div><div class="l">지난 주</div></div>
+      <div class="stat"><div class="n" id="st-left">0</div><div class="l">남은 주</div></div>
+      <div class="stat"><div class="n" id="st-pct">0%</div><div class="l">인생 진행도</div></div>
+    </div>
+    <div class="grid" id="grid"></div>
+    <div class="legend">
+      <span><i style="background:#ddd3c2;"></i> 지난 주</span>
+      <span><i style="background:#8a6d3b;"></i> 지금</span>
+      <span><i style="background:#e5ded2;"></i> 남은 주</span>
+    </div>
+    <div class="quote" id="quote"></div>
+    <div class="share">
+      <button onclick="share()">📤 공유하기</button>
+      <button onclick="window.open('https://all-jindan.pomyjo.com/','_blank')">🧬 76개 진단 보러 가기</button>
+    </div>
+  </div>
+
+  <div class="card faq">
+    <h3>💡 이 계산기는 어떻게 쓰나요?</h3>
+    <p>생년월일과 기대 수명을 입력하면, 인생 전체를 52주 × 수명 년수의 격자로 보여줍니다. 회색 점은 지나간 주, 골드 점은 지금 이 순간, 연한 점은 앞으로 남은 주입니다.</p>
+    <h3>🤔 왜 주 단위로 보는 게 의미 있나요?</h3>
+    <p>년 단위로 보면 인생이 길게 느껴지지만, 주 단위로 보면 유한함이 체감됩니다. 행동경제학 연구에서도 시간을 작은 단위로 쪼개 보는 것이 행동 변화에 효과적이라고 알려져 있습니다.</p>
+    <h3>⚖️ 이건 정확한 예측인가요?</h3>
+    <p>아니요. 기대 수명은 통계적 평균일 뿐, 개인의 건강·환경에 따라 크게 달라집니다. 이 도구는 예측이 아니라 '오늘을 소중히'라는 메시지를 위한 시각화입니다.</p>
+  </div>
+
+  <footer>
+    <a href="https://all-jindan.pomyjo.com/">올진단</a> · 문의 <a href="/cdn-cgi/l/email-protection" class="__cf_email__" data-cfemail="c4aaabafadb6a5f5f4f6f084a3a9a5ada8eaa7aba9">[email&#160;protected]</a><br>
+    이 도구는 교육·자기이해 목적이며, 건강 예측이나 보험 판단을 제공하지 않습니다.
+  </footer>
+</div>
+
+<script data-cfasync="false" src="/cdn-cgi/scripts/5c5dd728/cloudflare-static/email-decode.min.js"></script><script>
+function calc() {
+  const birthStr = document.getElementById('birth').value;
+  const lifespan = parseInt(document.getElementById('lifespan').value) || 80;
+  if (!birthStr) { alert('생년월일을 입력해주세요.'); return; }
+  const birth = new Date(birthStr);
+  const now = new Date();
+  const totalWeeks = lifespan * 52;
+  const livedWeeks = Math.max(0, Math.floor((now - birth) / (7 * 86400000)));
+  const leftWeeks = Math.max(0, totalWeeks - livedWeeks);
+  const pct = Math.min(100, Math.round((livedWeeks / totalWeeks) * 100));
+
+  document.getElementById('st-passed').textContent = livedWeeks.toLocaleString();
+  document.getElementById('st-left').textContent = leftWeeks.toLocaleString();
+  document.getElementById('st-pct').textContent = pct + '%';
+
+  // 격자 렌더링 (최대 120년 × 52 = 6240)
+  const grid = document.getElementById('grid');
+  grid.innerHTML = '';
+  const frag = document.createDocumentFragment();
+  for (let i = 0; i < totalWeeks; i++) {
+    const cell = document.createElement('div');
+    cell.className = 'cell ' + (i < livedWeeks ? 'past' : i === livedWeeks ? 'now' : 'future');
+    frag.appendChild(cell);
+  }
+  grid.appendChild(frag);
+
+  // 명언
+  const quotes = [
+    '"우리는 죽음을 알기에, 오늘을 더 살아갈 수 있다." — 스티브 잡스',
+    '"인생은 짧다. 하지만 주 단위로 보면 더 선명하다."',
+    '"지금 이 순간도 당신 인생의 한 주다."',
+    '"남은 주를 어떻게 쓸지는 오늘의 선택에 달렸다."'
+  ];
+  const q = quotes[Math.floor(Math.random() * quotes.length)];
+  document.getElementById('quote').textContent = q;
+
+  document.getElementById('result').style.display = 'block';
+  document.getElementById('result').scrollIntoView({ behavior: 'smooth' });
+  localStorage.setItem('wol_birth', birthStr);
+  localStorage.setItem('wol_lifespan', String(lifespan));
+}
+
+function share() {
+  const left = document.getElementById('st-left').textContent;
+  const pct = document.getElementById('st-pct').textContent;
+  const text = `내 인생은 ${pct} 지났고, ${left}주가 남았어요. 당신은 몇 주 남았나요?`;
+  const url = location.href;
+  if (navigator.share) { navigator.share({ text, url }).catch(()=>{}); }
+  else if (navigator.clipboard) { navigator.clipboard.writeText(text + ' ' + url); alert('📋 복사 완료! 공유해보세요.'); }
+  else { window.open('https://x.com/intent/post?text=' + encodeURIComponent(text + '\n' + url), '_blank'); }
+}
+
+// 저장된 값 복원
+(function(){
+  try {
+    const b = localStorage.getItem('wol_birth');
+    const l = localStorage.getItem('wol_lifespan');
+    if (b) document.getElementById('birth').value = b;
+    if (l) document.getElementById('lifespan').value = l;
+  } catch(e){}
+})();
+</script>
+
+<!-- 관련 진단 (올진단 노하우) -->
+<div style="max-width:720px;margin:24px auto;padding:20px;background:#fffdf8;border:1px solid #e5ded2;border-radius:12px;">
+  <div style="font-size:11px;letter-spacing:2px;color:#8a6d3b;font-weight:800;text-transform:uppercase;margin-bottom:10px;">삶을 설계하는 진단</div>
+  <div style="display:flex;gap:8px;flex-wrap:wrap;">
+    <a href="https://grit-focus-radar.pomyjo.com/" style="display:inline-block;padding:8px 14px;border-radius:999px;background:#fffdf8;border:1px solid #ddd3c2;color:#5a5245;text-decoration:none;font-size:12px;font-weight:700;">🏔️ 그릿 지수 진단</a>
+    <a href="https://FIRE-readiness-radar.pomyjo.com/" style="display:inline-block;padding:8px 14px;border-radius:999px;background:#fffdf8;border:1px solid #ddd3c2;color:#5a5245;text-decoration:none;font-size:12px;font-weight:700;">🏖️ FIRE 준비도 진단</a>
+    <a href="https://deep-work-battery.pomyjo.com/" style="display:inline-block;padding:8px 14px;border-radius:999px;background:#fffdf8;border:1px solid #ddd3c2;color:#5a5245;text-decoration:none;font-size:12px;font-weight:700;">📚 딥워크 배터리 진단</a>
+  </div>
+</div>
+
+<!-- 분석 비콘 -->
+<script>
+(function(){try{var s=location.hostname.split('.')[0];fetch('https://api.pomyjo.com/api/analytics/pageview',{method:'POST',headers:{'Content-Type':'application/json'},body:JSON.stringify({site:s,path:location.pathname}),keepalive:true})}catch(e){}})();
+</script>
+<script type="module" src="https://static.cloudflareinsights.com/beacon.min.js/v4513226cdae34746b4dedf0b4dfa099e1781791509496" integrity="sha512-ZE9pZaUXND66v380QUtch/5sE9tPFh2zg45pR2PB0CVkCtOREv2AJKkSidISWkysEuQ0EH8faUU5du78bx87UQ==" data-cf-beacon='{"version":"2024.11.0","token":"b3a167f1885f4c6a8b2d9e2b4711ff5b","r":1}' crossorigin="anonymous"></script>
+<h2>5. 쿠키 및 제3자 광고</h2>
+<p>본 서비스는 Google AdSense를 통해 광고를 게재합니다. Google 및 제3자 광고 파트너는 쿠키를 사용하여 이용자의 웹사이트 방문 기록을 기반으로 광고를 게재할 수 있습니다.</p>
+<p>Google은 DART 쿠키를 사용하여 비개인 식별 정보 기반의 맞춤 광고를 제공할 수 있습니다. 이용자는 <a href="https://adssettings.google.com" rel="noopener">Google 광고 설정</a> 페이지에서 맞춤 광고를 거부할 수 있습니다.</p>
+<p>제3자 광고업체의 쿠키 사용에 대한 자세한 내용은 <a href="https://www.aboutads.info" rel="noopener">www.aboutads.info</a>를 참고하시기 바랍니다.</p>
+
+</body>
+</html>
